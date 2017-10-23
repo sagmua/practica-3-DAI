@@ -1,0 +1,19 @@
+body{
+	background-color: rgb(49,197,223);
+	margin: auto;
+	font-family: "Tahoma";
+	width: 75%;
+	line-height: 18px;
+	border-style: solid;
+	border-width: 1px;
+	overflow: auto;
+
+}
+
+
+header img {
+	width: 100%;
+	display: inline;
+	vertical-align: middle;
+	margin: 1%;
+}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{tab_title}}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="static/style.css"/>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
+
+	</head>
+
+
+	<body>
+
+		<header>
+			
+      <div class="w3-row">
+        <div class="w3-third w3-container">
+          <img src= {{data_page.logo}} >
+        </div>
+
+        <div class = "w3-third w3-container">
+          <h1>{{data_page.header_title}}</h1>
+          <h2>{{data_page.header_subtitle}}</h2>
+        </div>
+
+
+        <div class="w3-third w3-container">
+  				{%if not logged%}
+  					<form action="" method = "post">
+  						<p><input type = "text" name = "username"/></p>
+  						<p><input type = "submit" value = "Login"/></p>
+  					</form>
+  				{%else%}
+            <p>Bienvenido {{session['username']}}</p>
+            <p><a href="/logout">Desconectarse</a></p>
+
+          {%endif%}
+        </div>
+
+        <div class "centered-content w3-row">
+          <div class = "content_left w3-col m4">
+            <ul>
+              {%for i in data_page.menu%}
+                <li>
+                  <a href={{i[1]}}>{{i[0]}}</a>
+                </li>
+              {%endfor%}
+            </ul>
+          </div>
+
+          <div class ="content_right w3-col m8">
+          </div>
+        </div>
+
+		</header>
+
+		<div class="container">
+			
+
+			<p>Click <a href="/">here</a> to go home.</p>
+		</div>
+
+
+		<footer>
+			Samuel Cardenete Rodríguez. (GPLv3)
+		</footer>
+
+
+	</body>
+</html>
