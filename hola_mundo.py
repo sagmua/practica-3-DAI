@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, session, redirect, url_for, escape, request
+from flask import Flask, render_template, session, redirect, url_for, escape, request, g
 import shelve, queue
 
 
@@ -9,19 +9,21 @@ app = Flask(__name__)
 
 app.secret_key = 'any random string'
 
+@app.before_first_request
+def start():
+	session['last_visited'] = []
 
-#creamos una variable que indique las últimas páginas visitadas:
 
 
 
 
-@app.route('/',  methods  = ['GET', 'POST'])                         # decorador, varia los parametros
+@app.route('/',  methods  = ['GET', 'POST'])			# decorador, varia los parametros
 def index():
 
-	session["last_visited"] = []
+	
 
 	data_page = {
-
+		'title' : 'pagina personal',
 		'header_title': 'Mi página personal',
 		'header_subtitle' : 'pequeño titulo',
 		'logo' : 'static/img/carretera.jpg',
@@ -32,11 +34,14 @@ def index():
 
 		],
 
-		'last_visited' : session["last_visited"]
+		'last_visited' : session['last_visited']
 	}
 
-	if len(session["last_visited"])>0:
-		return(len(session["last_visited"]))
+	
+
+
+
+	
 
 	#comprobamos si el usuario y la contraseña introducidas coinciden con algún usuario del sistema:
 	if request.method == 'POST':
@@ -60,9 +65,6 @@ def index():
 
 
 
-	return render_template('welcome.html')
-
-
 
 @app.route('/about')
 def about():
@@ -77,9 +79,11 @@ def signup():
 		user = request.form['username']
 		password = request.form['password']
 
+		#descripción inicial:
+		descripcion = 'Esta es una descripción de mi usuario'
 		#creamos una nueva instancia del user en la base de datos:
-		data_base[user] = {'username': user, 'password': password}
-		session[user] = user
+		data_base[user] = {'username': user, 'password': password, 'descripcion': descripcion}
+		session['username'] = user
 
 		#cerramos la base de datos:
 		data_base.close()
@@ -91,13 +95,8 @@ def signup():
 
 @app.after_request
 def store_visted_urls(response):
-
-	if len(session) >= 3:
-		session["last_visited"].pop(0)
-		session["last_visited"].append(request.url)
-	else:
-		session["last_visited"].append(request.url)
-
+	session['last_visited'].append(request.url)
+	
 	return response
 
 
@@ -117,6 +116,57 @@ def logout():
 	# remove the username from the session if it is there
    session.pop('username', None)
    return redirect(url_for('index'))
+
+
+
+#Permitimos al usuario visualizar los datos de su cuenta:
+@app.route('/userInfo')
+def user_info():
+	#sacamos los datos del formulario:
+	data_base = shelve.open('data_base.dat')
+	user = data_base.get('username', None)
+
+	data_page = {
+			'user': user.username,
+			'descripcion' : user.descripcion
+	}
+
+	render_template('user_info.html', data_page=data_page)
+
+
+
+#Función en la cuál permitiremos al usuario modificar los datos de su cuenta:
+@app.route('/setting')
+def setting():
+
+	return render_template('settings.html')
+
+
+#Función para actualizar los datos del usuario:
+@app.route('/update', methods =['GET', 'POST'])
+def update_info():
+	if(request.method == 'POST'):
+		if request.form['password'] != request.form['confirm_password']:
+			return render_template('setting.html', error=True)
+		else:
+			#sacamos los datos del formulario:
+			data_base = shelve.open('data_base.dat')
+			user = request.form['username']
+			password = request.form['password']
+
+			#descripción inicial:
+			descripcion = request.form['descripcion']
+			#creamos una nueva instancia del user en la base de datos:
+			data_base[user] = {'username': user, 'password': password, 'descripcion': descripcion}
+			session['username'] = user
+
+			#cerramos la base de datos:
+			data_base.close()
+			return redirect(url_for(index))
+			
+
+
+
 
 
 if __name__ == '__main__':
