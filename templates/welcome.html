@@ -29,7 +29,9 @@
   				{%if not logged%}
   					<form action="" method = "post">
   						<p><input type = "text" name = "username"/></p>
+              <p><input type = "password" name = "password"/></p>
   						<p><input type = "submit" value = "Login"/></p>
+              <p><a href="/signup"> Registrarse</a></p>
   					</form>
   				{%else%}
             <p>Bienvenido {{session['username']}}</p>
@@ -38,10 +40,16 @@
           {%endif%}
         </div>
 
-        <div class "centered-content w3-row">
+        <div class="centered-content w3-row">
           <div class = "content_left w3-col m4">
             <ul>
               {%for i in data_page.menu%}
+                <li>
+                  <a href={{i[1]}}>{{i[0]}}</a>
+                </li>
+              {%endfor%}
+
+              {%for i in data_page.last_visited%}
                 <li>
                   <a href={{i[1]}}>{{i[0]}}</a>
                 </li>

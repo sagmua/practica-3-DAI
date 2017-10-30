@@ -1,13 +1,11 @@
 body{
 	background-color: rgb(49,197,223);
-	margin: auto;
 	font-family: "Tahoma";
-	width: 75%;
-	line-height: 18px;
-	border-style: solid;
-	border-width: 1px;
-	overflow: auto;
+}
 
+#centered-body {
+	text-align: center;
+	padding: 2%;
 }
 
 
@@ -16,4 +14,11 @@ header img {
 	display: inline;
 	vertical-align: middle;
 	margin: 1%;
+}
+
+
+body centered-content{
+
+	text-align: center;
+
 }
