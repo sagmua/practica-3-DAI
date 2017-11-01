@@ -24,9 +24,9 @@ def index():
 
 	data_page = {
 		'title' : 'pagina personal',
-		'header_title': 'Mi página personal',
-		'header_subtitle' : 'pequeño titulo',
-		'logo' : 'static/img/carretera.jpg',
+		'header_title': 'Soluciones Domótica',
+		'header_subtitle' : 'Haciendo más facil la vida',
+		'logo' : 'static/img/logo.png',
 		'menu' : [
 			('Home', '/'),
 			('Contact', '/contact'),
@@ -95,7 +95,12 @@ def signup():
 
 @app.after_request
 def store_visted_urls(response):
-	session['last_visited'].append(request.url)
+	if not request.url in session['last_visited']:
+		if len(session['last_visited']) < 3 :
+			session['last_visited'].append(request.url)
+		else:
+			session['last_visited'].pop(0)
+			session['last_visited'].append(request.url)
 	
 	return response
 
