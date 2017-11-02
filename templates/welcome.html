@@ -31,8 +31,11 @@
   						<p><input type = "text" name = "username"/></p>
               <p><input type = "password" name = "password"/></p>
   						<p><input type = "submit" value = "Login"/></p>
-              <p><a href="/signup"> Registrarse</a></p>
   					</form>
+            <form action="\signup" method = "post">
+              <input type = "submit" value = "register">
+            </form>
+
   				{%else%}
             <p>Bienvenido {{session['username']}}</p>
             <p><a href="/logout">Desconectarse</a></p>
@@ -56,6 +59,7 @@
 
               {% if logged %}
                 <a href='/setting'>Opciones</a>
+                <a href='/userInfo'>Mis datos</a>
               {% endif %}
               
               <div class="dropdown">

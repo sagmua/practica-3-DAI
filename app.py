@@ -49,7 +49,7 @@ def index():
 		data_base = shelve.open("data_base.dat")
 		user = data_base.get(request.form['username'], None)
 
-		if user != None and user['username'] == request.form['password']:
+		if user != None and user['password'] == request.form['password']:
 			session['username'] = request.form['username']
 			
 			return redirect(url_for('index'))
@@ -73,6 +73,10 @@ def about():
 #ruta para registrarse en caso de no estarlo:
 @app.route('/signup', methods= ['GET', 'POST'])
 def signup():
+	return render_template('signup.html')
+
+@app.route('/register', methods= ['GET', 'POST'])
+def register():
 	if request.method == 'POST':
 		#sacamos los datos del formulario:
 		data_base = shelve.open('data_base.dat')
@@ -88,10 +92,7 @@ def signup():
 		#cerramos la base de datos:
 		data_base.close()
 
-
-
-	return(render_template('signup.html'))
-
+	return redirect(url_for('index'))
 
 @app.after_request
 def store_visted_urls(response):
@@ -129,14 +130,16 @@ def logout():
 def user_info():
 	#sacamos los datos del formulario:
 	data_base = shelve.open('data_base.dat')
-	user = data_base.get('username', None)
+	user = data_base[session['username']]
+
+	print(user['username'])
 
 	data_page = {
-			'user': user.username,
-			'descripcion' : user.descripcion
+			'user': user['username'],
+			'descripcion' : user['descripcion']
 	}
 
-	render_template('user_info.html', data_page=data_page)
+	return render_template('user_info.html', data_page=data_page)
 
 
 
@@ -150,9 +153,10 @@ def setting():
 #Función para actualizar los datos del usuario:
 @app.route('/update', methods =['GET', 'POST'])
 def update_info():
+
 	if(request.method == 'POST'):
 		if request.form['password'] != request.form['confirm_password']:
-			return render_template('setting.html', error=True)
+			return redirect(url_for('setting'))
 		else:
 			#sacamos los datos del formulario:
 			data_base = shelve.open('data_base.dat')
@@ -167,7 +171,7 @@ def update_info():
 
 			#cerramos la base de datos:
 			data_base.close()
-			return redirect(url_for(index))
+			return redirect(url_for('index'))
 			
 
 
